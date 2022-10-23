@@ -4,6 +4,6 @@
 ![Animated gif pacman game](http://ai.berkeley.edu/images/pacman_game.gif)
 
 ## Team Members
-Abhishek Sharm
-Gaurav Ratnakar Gadewar
-Chirag Rajavat
+- Abhishek Sharm
+- Gaurav Ratnakar Gadewar
+- Chirag Rajavat
