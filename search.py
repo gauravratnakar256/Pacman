@@ -180,9 +180,53 @@ def breadthFirstSearch(problem):
     return result
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start_position = problem.getStartState()
+
+    # track visited position
+    visited = {}
+    visited[start_position] = True
+
+    # path map.
+    path = {}
+    path_cost = {}
+    queue = util.PriorityQueue()
+    for successor in problem.getSuccessors(problem.getStartState()):
+        path_cost[successor] = successor[2]
+        queue.push(successor, path_cost[successor])
+        path[successor] = start_position
+    
+    last_state = None
+    # while queue is not empty, loop over it.
+    while not queue.isEmpty():
+        cur_state = queue.pop()
+        cur_position = cur_state[0]
+
+        # if current position is goal state break out of while loop
+        if problem.isGoalState(cur_position):
+            last_state = cur_state
+            break
+
+        # check whether current position is not visited and make it as true.
+        if cur_position not in visited:
+            visited[cur_position] = True
+
+            # if neighbours are not visited , push them into queue.
+            for neighbour in problem.getSuccessors(cur_position):
+                if neighbour[0] not in visited:
+                    path_cost[neighbour] = path_cost[cur_state] + neighbour[2]
+                    queue.push(neighbour, path_cost[neighbour])
+                    path[neighbour] = cur_state
+                    
+    result = []
+    # Create path from reverse traversing the map
+    while last_state != start_position:
+        result.append(last_state[1])
+        last_state = path[last_state]
+
+    #reverse the result as states were added  from goal to start position
+    result.reverse()
+    
+    return result
 
 def nullHeuristic(state, problem=None):
     """
