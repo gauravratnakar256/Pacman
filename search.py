@@ -92,7 +92,55 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # starting position of pac-man
+    start_position = problem.getStartState()
+
+    # track visited position
+    visited = {}
+    visited[start_position] = True
+
+    # path map.
+    map = {}
+    queue = util.Queue()
+    for successor in problem.getSuccessors(problem.getStartState()):
+        queue.push(successor)
+        map[successor] = start_position
+
+    # result list consists the directions.
+    res_list = []
+
+    # while queue is not empty, loop over it.
+    while not queue.isEmpty():
+        cur_state = queue.pop()
+        cur_position = cur_state[0]
+
+        # check whether current position is not visited and make it as true.
+        if cur_position not in visited:
+            visited[cur_position] = True
+
+            # if current position is goal state break out of while loop
+            if problem.isGoalState(cur_position):
+                break
+
+            # if neighbours are not visited , push them into queue.
+            for neighbour in problem.getSuccessors(cur_position):
+                if neighbour[0] not in visited:
+                    queue.push(neighbour)
+                    map[neighbour] = cur_state
+
+    # Create path from reverse traversing the map
+    direction = cur_state[1]
+    while cur_state != start_position:
+        state = map[cur_state]
+        if state != start_position:
+            res_list.append(state[1])
+        cur_state = state
+    res_list.insert(0, direction)
+
+    #reverse the result as states were added  from goal to start position
+    res_list.reverse()
+    
+    return res_list
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
