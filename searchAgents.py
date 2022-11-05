@@ -383,29 +383,32 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    remaining_corners = []
 
-    res = 0
-    unvisited_corners = []
-
-    #append all unvisited corners to list from current state
-    for i,corner in enumerate(corners):
-        if state[1][i] == corner:
+    #add all remaining corners from current state to list
+    for index, point in enumerate(corners):
+        if state[1][index] == point:
             continue
-        unvisited_corners.append(corner)
+        remaining_corners.append(point)
 
-    cur_point = state[0]
+    ini_point = state[0]
+    result = 0
+    
+    #calculate cost of current point to minimum distance corner for all the remaining corners
+    #and then from that corner to all other corners
+    while len(remaining_corners)!=0:
+        min_point = (-1, -1)
+        min_dist = sys.maxsize
 
-    #loop through all unvisited corners and find the cost from current point to min distance corner
-    #and that corner to other min distance corner untill all unvisited corners are visited
-    while len(unvisited_corners)!=0:
-        min_distance = sys.maxsize
-        min_corner = (-1, -1)
-        for corner in unvisited_corners:
-            min_distance, min_corner = min((util.manhattanDistance(cur_point, corner),corner), (min_distance, min_corner))
-        unvisited_corners.remove(min_corner)
-        cur_point = min_corner
-        res = res + min_distance
-    return res
+        #calculate the manhattanDistance for all the points and get the min
+        for corner in remaining_corners:
+            manhattanDistance = util.manhattanDistance(ini_point, corner)
+            min_dist, min_point = min((manhattanDistance,corner), (min_dist, min_point))
+        
+        remaining_corners.remove(min_point)
+        ini_point = min_point
+        result = result + min_dist
+    return result
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
