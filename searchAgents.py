@@ -40,6 +40,7 @@ from game import Actions
 import util
 import time
 import search
+import sys
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -329,7 +330,7 @@ class CornersProblem(search.SearchProblem):
             "*** YOUR CODE HERE ***"
             #get successors as (state, action, cost) and state will be (position, corners)
             #visitedCorners = list(state[1])
-            visitedCorners = state[1]
+            visitedCorners = list(state[1])
             x,y = state[0]
             dx,dy = Actions.directionToVector(action)
             nextx,nexty = int(x + dx),int(y + dy)
