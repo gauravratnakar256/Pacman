@@ -288,7 +288,8 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        #start state of pacman (position, corners)
+
+        #Initial state of pacman (position, corners)
         self.startState = (self.startingPosition, ((-1, -1), (-1, -1), (-1, -1), (-1, -1)))
 
     def getStartState(self):
@@ -297,6 +298,8 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+
+        # Returning intial state of pacman
         return self.startState
 
     def isGoalState(self, state):
@@ -304,9 +307,9 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        if state[1] == self.corners:
-            return True
-        return False
+
+        # Checking if visited corners state is equal to real corners state
+        return True if state[1] == self.corners else False
 
     def getSuccessors(self, state):
         """
@@ -329,28 +332,32 @@ class CornersProblem(search.SearchProblem):
 
             "*** YOUR CODE HERE ***"
             #get successors as (state, action, cost) and state will be (position, corners)
-            #visitedCorners = list(state[1])
+
+            # Creating list of currently visited corners from passed state
             visitedCorners = list(state[1])
+
+            # code snippet for figuring out whether a new position hits a wall
             x,y = state[0]
             dx,dy = Actions.directionToVector(action)
             nextx,nexty = int(x + dx),int(y + dy)
             hitsWall = self.walls[nextx][nexty]
-
+            
+            # if hits wall than continue no need to do add it in successors
             if hitsWall:
                 continue
-
+            
+            # Checking if new position is corner position and not visited
             if (nextx,nexty) in self.corners and (nextx,nexty) not in visitedCorners:
                 index=-1
+                # Finding the index of new corner
                 for i,corner in enumerate(self.corners):
                     if corner == (nextx,nexty):
                         index = i
+                # Updating visited corners list with newly found corner
                 visitedCorners[index] = (nextx,nexty)
-                nextState =  ((nextx,nexty),tuple(visitedCorners))
-
-                successors.append((nextState,action,1))
-            else:
-                nextState = ((nextx,nexty),state[1])
-                successors.append((nextState,action, 1))
+            
+            # Appending the next position state to successors
+            successors.append((((nextx,nexty),tuple(visitedCorners)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
